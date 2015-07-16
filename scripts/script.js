@@ -116,6 +116,104 @@ console.log("LINKED");
     var playerHand = new CardStack(playingDeck.dealCards(2));
     var computerHand = new CardStack(playingDeck.dealCards(2));
 
+    function dealNewHand() {
+        playingDeck = new CardStack(fullDeck);
+        playerHand = new CardStack(playingDeck.dealCards(2));
+        computerHand = new CardStack(playingDeck.dealCards(2));
+        $('.player-hand').empty();
+        $('.computer-hand').empty();
+        $('.computer-total').text(computerHand.totalValue());
+        $('.player-total').text(playerHand.totalValue());
+        $('.player-hand').text(playerHand.cardsInDeck());
+        $('.computer-hand').text(computerHand.cardsInDeck());
+    }
+
+    function hit (deck,hand){
+        hand.addCard(deck.dealCards(1)[0]);
+        if (hand.totalValue() > 21) {
+            return "Busted with "+hand.totalValue();
+        } else {
+            return hand.totalValue();
+        }
+    }
+
+    function autoPlay(hand){
+        while (hand.totalValue() < 17){
+            hit(playingDeck,hand);
+        }
+        if (hand.totalValue() > 21) {
+            return "Busted with "+hand.totalValue();
+        } else {
+            return hand.totalValue();
+        }
+    }
+
+    function playerLose() {
+        $('#lose-modal').toggle(); // CREATE lose-modal
+        alert("you lose");
+        dealNewHand();
+    }
+
+    function computerLose() {
+        $('#win-modal').toggle();   // CREATE win-modal
+        alert("you win");
+        dealNewHand();
+    }
+
+    function gamePush() {
+        $('#push-modal').toggle();   // CREATE win-modal   
+        alert("push! it's a tie!");
+        dealNewHand();
+    }
+
+    function decideWinner(playerTotal,computerTotal) {
+        if (playerTotal > computerTotal) {
+            computerLose();
+        } else if (computerTotal > playerTotal) {
+            playerLose();
+        } else {
+            gamePush();
+        }
+    }
+
+
+    $('#win-play-again').on('click',function(event){
+        dealNewHand();
+        $('#win-modal').toggle(); //CREATE this button
+    });
+
+    $('#lose-play-again').on('click',function(event){
+        dealNewHand();
+        $('#lose-modal').toggle(); //CREATE this button
+    });
+
+    $('.hit').on('click',function(event){
+        var result = hit(playingDeck,playerHand);
+        if (typeof(result) === "string") {
+            $('.player-total').text(result);
+            $('.player-hand').text(playerHand.cardsInDeck());
+            playerLose();
+        } else {
+            $('.player-total').text(result);
+            $('.player-hand').text(playerHand.cardsInDeck());
+        }
+    });
+
+    $('.stand').on('click',function(){
+        var computerResult = autoPlay(computerHand);
+        if (typeof(computerResult) === "string") {
+            $('.computer-total').text(computerResult);
+            $('.computer-hand').text(computerHand.cardsInDeck());
+            computerLose()
+        } else {
+            $('.computer-total').text(computerResult);
+            $('.computer-hand').text(computerHand.cardsInDeck());
+            decideWinner();
+        }
+    });
+
+    dealNewHand();
+
     
 
 // })
