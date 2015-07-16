@@ -1,4 +1,4 @@
-console.log("LINKED")
+console.log("LINKED");
 // $(document).ready(function(){
 
     // Create card prototype with card
@@ -13,19 +13,19 @@ console.log("LINKED")
     function CardStack (cardArray){
         this.cards = cardArray;
         
-        // add a card to the stack
+        // pushes a card (object) to the cards array
         this.addCard = function(card){
-            this.cards.push(card)
+            this.cards.push(card);
         };
 
         // return name of all cards in stack
         this.cardsInDeck = function(){
             var allCards = [];
-            var cards = this.cards
+            var cards = this.cards;
             for (var i = 0; i < cards.length; i++) {
                 allCards.push(cards[i].cardName);
             }
-            return allCards
+            return allCards;
         };
 
         // pull a random card from the stack
@@ -35,10 +35,10 @@ console.log("LINKED")
             if (cards.length > 0 && cards.length > number) {
                 for (var i = 0; i < number; i++) {
                     var randomCards = cards.splice(Math.floor(Math.random() * cards.length),1);
-                    dealtCards.push(randomCards);
+                    dealtCards.push(randomCards[0]);
                 }
             }
-            return dealtCards
+            return dealtCards;
         };
 
         // return total value of cards in stack
@@ -50,14 +50,14 @@ console.log("LINKED")
                 totalArray.push(cards[i].value);
                 total += totalArray[i];
             }
-            if (total > 21 && totalArray.indexOf(11) => 0) {
-                for (var i = 0; i < totalArray.length; i++) {
-                    if(totalArray[i] === 11) {
+            if (total > 21) {
+                for (var k = 0; k < totalArray.length; k++) {
+                    if(totalArray[k] === 11) {
                         total -= 10;
                     }
-                };
+                }
             }
-            return total
+            return total;
         };
     }// End CardStack factory
 
@@ -74,7 +74,7 @@ console.log("LINKED")
                 names.push(numbers[k]+" of "+suits[i]);
             }
         }
-        return names
+        return names;
     })();
 
     var suitArray = (function(){
@@ -85,8 +85,8 @@ console.log("LINKED")
                 fullSuits.push(suits[k]);
             }
         }
-        return fullSuits
-    })()
+        return fullSuits;
+    })();
 
     var valueArray = [11,11,11,11,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,9,9,9,8,8,8,8,7,7,7,7,6,6,6,6,5,5,5,5,4,4,4,4,3,3,3,3,2,2,2,2];
 
@@ -96,7 +96,7 @@ console.log("LINKED")
         for (var i = 0; i < fileNames.length; i++) {
             fullPaths.push(directory+fileNames[i]);
         }
-        return fullPaths
+        return fullPaths;
     })(imgFileNames);
     // End of section creating arrays to populate the initial deck of cards
 
@@ -107,12 +107,11 @@ console.log("LINKED")
         for (var k = 0; k < 52; k++) {
             deck.push(new Card(namesArray[k],valuesArray[k],suitsArray[k],imagesUrlArray[k]));
         }
-        return deck
+        return deck;
     }
 
 
     var fullDeck = createFullDeck(nameArray,valueArray,suitArray,imageUrlArray);
-    
     var playingDeck = new CardStack(fullDeck);
     var playerHand = new CardStack(playingDeck.dealCards(2));
     var computerHand = new CardStack(playingDeck.dealCards(2));
