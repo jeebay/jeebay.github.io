@@ -94,7 +94,7 @@ console.log("LINKED");
         var fullPaths = [];
         var directory = 'images/cards/classic-cards/';
         for (var i = 0; i < fileNames.length; i++) {
-            fullPaths.push(directory+fileNames[i]);
+            fullPaths.push("url('"+directory+fileNames[i]+"')");
         }
         return fullPaths;
     })(imgFileNames);
@@ -117,6 +117,8 @@ console.log("LINKED");
     var computerHand = new CardStack(playingDeck.dealCards(2));
 
     function dealNewHand() {
+        var $playerHand = $('.player-hand');
+        var $computerHand = $('.computer-hand');
         playingDeck = new CardStack(fullDeck);
         playerHand = new CardStack(playingDeck.dealCards(2));
         computerHand = new CardStack(playingDeck.dealCards(2));
@@ -124,8 +126,8 @@ console.log("LINKED");
         $('.computer-hand').empty();
         $('.computer-total').text(computerHand.totalValue());
         $('.player-total').text(playerHand.totalValue());
-        $('.player-hand').text(playerHand.cardsInDeck());
-        $('.computer-hand').text(computerHand.cardsInDeck());
+        drawHand(playerHand,$playerHand);
+        drawHand(computerHand,$computerHand);
     }
 
     function hit (deck,hand){
@@ -176,6 +178,13 @@ console.log("LINKED");
         }
     }
 
+    function drawHand (deck,$section) {
+        for (var i = 0; i < deck.cards.length; i++) {
+            var $newCard = $('<div>').attr('class','card');
+            $newCard.css('background-image',deck.cards[i].imageUrl);
+            $section.append($newCard);
+        };
+    }
 
     $('#win-play-again').on('click',function(event){
         dealNewHand();

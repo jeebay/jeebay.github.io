@@ -1,0 +1,35 @@
+body {
+	background-image: url('../images/felt-table.jpg');
+}
+
+.section {
+	background-color: rgba(180,180,180,0.2);
+	border: 1px solid rgba(0,0,0,0.4);
+	border-radius: 4px;
+	margin: 0px 0px 15px 0px;
+	padding: 0px 5px;
+}
+
+.hero {
+	text-align: center;
+	font-weight: 300;
+	line-height: 1.25;
+	border-bottom: 2px solid black;
+
+}
+
+button {
+	color: black;
+	border-color: black;
+}
+
+h4 {
+	border-bottom: 1px solid black;
+}
+
+.card {
+	height: 150px;
+	width: 112px;
+	background-size: cover;
+	display: inline-block;
+}
