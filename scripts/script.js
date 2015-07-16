@@ -1,5 +1,5 @@
 console.log("LINKED");
-$(document).ready(function(){
+// $(document).ready(function(){
 
     // Create card prototype with card
     function Card(cardName,value,suit,imageUrl){
@@ -165,19 +165,19 @@ $(document).ready(function(){
 
     function playerLose() {
         $('#lose-modal').toggle(); // CREATE lose-modal
-        alert("you lose");
+        console.log("you lose");
         // dealNewHand();
     }
 
     function computerLose() {
         $('#win-modal').toggle();   // CREATE win-modal
-        alert("you win");
+        console.log("you win");
         // dealNewHand();
     }
 
     function gamePush() {
         $('#push-modal').toggle();   // CREATE win-modal   
-        alert("push! it's a tie!");
+        console.log("push! it's a tie!");
         // dealNewHand();
     }
 
@@ -227,4 +227,4 @@ $(document).ready(function(){
 
     
 
-})
+// })
