@@ -103,17 +103,23 @@ console.log("LINKED");
         playingDeck = new CardStack(fullDeck);
         playerHand = new CardStack(playingDeck.dealCards(2));
         computerHand = new CardStack(playingDeck.dealCards(2));
+        
+
         $('.player-hand').empty();
         $('.computer-hand').empty();
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
+        
         playerHand.cards.forEach(function(card){
             drawHand(card,$playerHand)
         });
         computerHand.cards.forEach(function(card){
             drawHand(card,$computerHand)
         });
-        if (blackJackValue(playerHand) === 21 && blackJackValue(computerHand === 21)) {
+
+        // console.log(playerHand.cards.length);
+
+        if (blackJackValue(playerHand) === 21 && blackJackValue(computerHand) === 21) {
             gamePush();
         } else if (blackJackValue(playerHand) === 21) {
             computerLose();
@@ -123,9 +129,12 @@ console.log("LINKED");
     }
 
     function blackJackValue(deck){
-            var cardsInHand = deck['cards'];
+            var cardsInHand = deck.cards;
             var totalArray = [];
             var total = 0;
+            
+            // console.log(cardsInHand.length);
+            
             for (var i = 0; i < cardsInHand.length; i++) {
                 totalArray.push(cardsInHand[i].value);
                 total += totalArray[i];
@@ -146,7 +155,7 @@ console.log("LINKED");
         drawHand(newCard,$section);
         $section.next().text(blackJackValue(hand));
         if (blackJackValue(hand) > 21) {
-            return "Busted with "+blackJackValue(hand);
+            return "busted with "+blackJackValue(hand);
         } else {
             return blackJackValue(hand);
         }
@@ -157,26 +166,35 @@ console.log("LINKED");
             hit(playingDeck,hand,$section);
         }
         if (blackJackValue(hand) > 21) {
-            return "Busted with "+blackJackValue(hand);
+            return "busted with "+blackJackValue(hand);
         } else {
             return blackJackValue(hand);
         }
     }
 
     function playerLose() {
-        $('#lose-modal').toggle(); // CREATE lose-modal
+        $('#modal').toggle(); // CREATE lose-modal
+        $('.modal-title').text("You Lose!");
+        $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
+        $('#play-again').text('Play next hand');
         console.log("you lose");
         // dealNewHand();
     }
 
     function computerLose() {
-        $('#win-modal').toggle();   // CREATE win-modal
+        $('#modal').toggle(); // CREATE lose-modal
+        $('.modal-title').text("You Win!");
+        $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
+        $('#play-again').text('Play next hand');
         console.log("you win");
         // dealNewHand();
     }
 
     function gamePush() {
-        $('#push-modal').toggle();   // CREATE win-modal   
+        $('#modal').toggle(); // CREATE lose-modal
+        $('.modal-title').text("It was a push!");
+        $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
+        $('#play-again').text('Play next hand');
         console.log("push! it's a tie!");
         // dealNewHand();
     }
@@ -197,14 +215,17 @@ console.log("LINKED");
         $section.append($newCard);
     }
 
-    $('#win-play-again').on('click',function(event){
-        dealNewHand();
-        $('#win-modal').toggle(); //CREATE this button
-    });
+    function delay (delayedFunction,delay){
+        callTime = Date.now();
+        while (Date.now() < callTime + delay){
 
-    $('#lose-play-again').on('click',function(event){
+        }
+        delayedFunction;
+    }
+
+    $('#play-again').on('click',function(event){
         dealNewHand();
-        $('#lose-modal').toggle(); //CREATE this button
+        $('#modal').toggle(); //CREATE this button
     });
 
     $('.hit').on('click',function(event){
@@ -223,7 +244,7 @@ console.log("LINKED");
         }
     });
 
-    dealNewHand();
+    // dealNewHand();
 
     
 
