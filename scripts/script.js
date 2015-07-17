@@ -9,39 +9,6 @@ console.log("LINKED");
         this.imageUrl = imageUrl;
     }// End Card factory
 
-    // Create stack of cards prototype with methods to return the cards in the hand, add a card, pull random card
-    function CardStack (cardArray){
-        this.cards = cardArray;
-        
-        // pushes a card (object) to the cards array
-        this.addCard = function(card){
-            this.cards.push(card);
-        };
-
-        // return name of all cards in stack
-        this.cardsInDeck = function(){
-            var allCards = [];
-            var cards = this.cards;
-            for (var i = 0; i < cards.length; i++) {
-                allCards.push(cards[i].cardName);
-            }
-            return allCards;
-        };
-
-        // pull a random card from the stack
-        this.dealCards = function(number){
-            var cards = this.cards;
-            var dealtCards = [];
-            if (cards.length > 0 && cards.length > number) {
-                for (var i = 0; i < number; i++) {
-                    var randomCards = cards.splice(Math.floor(Math.random() * cards.length),1);
-                    dealtCards.push(randomCards[0]);
-                }
-            }
-            return dealtCards;
-        };
-    }// End CardStack factory
-
     // Creating arrays of file names, card names, suits, and values in order to create a deck of cards
 
     var nameArray = (function(){
@@ -91,18 +58,17 @@ console.log("LINKED");
         return deck;
     }
 
-
     var fullDeck = createFullDeck(nameArray,valueArray,suitArray,imageUrlArray);
-    var playingDeck = new CardStack(fullDeck);
-    var playerHand = new CardStack(playingDeck.dealCards(2));
-    var computerHand = new CardStack(playingDeck.dealCards(2));
+    var playingDeck = [];
+    var playerHand = [];
+    var computerHand = [];
 
     function dealNewHand() {
         var $playerHand = $('.player-hand');
         var $computerHand = $('.computer-hand');
-        playingDeck = new CardStack(fullDeck);
-        playerHand = new CardStack(playingDeck.dealCards(2));
-        computerHand = new CardStack(playingDeck.dealCards(2));
+        playingDeck = _.shuffle(fullDeck);
+        playerHand = playingDeck.splice(0,2);
+        computerHand = playingDeck.splice(0,2);
         
 
         $('.player-hand').empty();
@@ -110,10 +76,10 @@ console.log("LINKED");
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
         
-        playerHand.cards.forEach(function(card){
+        playerHand.forEach(function(card){
             drawHand(card,$playerHand)
         });
-        computerHand.cards.forEach(function(card){
+        computerHand.forEach(function(card){
             drawHand(card,$computerHand)
         });
 
@@ -128,15 +94,14 @@ console.log("LINKED");
         }
     }
 
-    function blackJackValue(deck){
-            var cardsInHand = deck.cards;
+    function blackJackValue(hand){
             var totalArray = [];
             var total = 0;
             
             // console.log(cardsInHand.length);
             
-            for (var i = 0; i < cardsInHand.length; i++) {
-                totalArray.push(cardsInHand[i].value);
+            for (var i = 0; i < hand.length; i++) {
+                totalArray.push(hand[i].value);
                 total += totalArray[i];
             }
             if (total > 21) {
@@ -150,8 +115,8 @@ console.log("LINKED");
         };
 
     function hit (deck,hand,$section){
-        var newCard = deck.dealCards(1)[0];
-        hand.addCard(newCard);
+        var newCard = deck.splice(0,1)[0];
+        hand.push(newCard);
         drawHand(newCard,$section);
         $section.next().text(blackJackValue(hand));
         if (blackJackValue(hand) > 21) {
@@ -173,30 +138,27 @@ console.log("LINKED");
     }
 
     function playerLose() {
-        $('#modal').toggle(); // CREATE lose-modal
+        $('#modal').toggle(); 
         $('.modal-title').text("You Lose!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
         console.log("you lose");
-        // dealNewHand();
     }
 
     function computerLose() {
-        $('#modal').toggle(); // CREATE lose-modal
+        $('#modal').toggle(); 
         $('.modal-title').text("You Win!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
         console.log("you win");
-        // dealNewHand();
     }
 
     function gamePush() {
-        $('#modal').toggle(); // CREATE lose-modal
+        $('#modal').toggle(); 
         $('.modal-title').text("It was a push!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
         console.log("push! it's a tie!");
-        // dealNewHand();
     }
 
     function decideWinner(playerTotal,computerTotal) {
@@ -213,14 +175,6 @@ console.log("LINKED");
         var $newCard = $('<div>').attr('class','card animated fadeInDown');
         $newCard.css('background-image',card.imageUrl);
         $section.append($newCard);
-    }
-
-    function delay (delayedFunction,delay){
-        callTime = Date.now();
-        while (Date.now() < callTime + delay){
-
-        }
-        delayedFunction;
     }
 
     $('#play-again').on('click',function(event){
@@ -246,6 +200,11 @@ console.log("LINKED");
 
     // dealNewHand();
 
-    
+    // setTimeout(function () { 
+    //     dealCard1(); 
+    //     setTimeout(function () { 
+    //         dealCard2; 
+    //     }, 600); 
+    // }, 600)
 
 // })
