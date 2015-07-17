@@ -3,7 +3,7 @@ body {
 }
 
 .section {
-    background-color: rgba(180,180,180,0.2);
+    background-color: rgba(210,210,210,.4);
     border: 1px solid rgba(0,0,0,0.4);
     border-radius: 4px;
     margin: 0px 0px 15px 0px;
@@ -50,6 +50,7 @@ h4 {
 }
 
 .modal-text {
+    background-color: rgba(220,220,220,.8);
     position: relative;
     margin: 0 30%;
     /*background-color: white;*/

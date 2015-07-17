@@ -62,6 +62,7 @@ console.log("LINKED");
     var playingDeck = [];
     var playerHand = [];
     var computerHand = [];
+    var backOfCard = new Card('back of card',0,'all suits',"url('images/cards/classic-cards/b2fv.png')");
 
     function dealNewHand() {
         var $playerHand = $('.player-hand');
@@ -79,9 +80,9 @@ console.log("LINKED");
         playerHand.forEach(function(card){
             drawHand(card,$playerHand)
         });
-        computerHand.forEach(function(card){
-            drawHand(card,$computerHand)
-        });
+        
+        drawHand(backOfCard,$computerHand)
+        drawHand(computerHand[1],$computerHand)
 
         // console.log(playerHand.cards.length);
 
@@ -97,8 +98,6 @@ console.log("LINKED");
     function blackJackValue(hand){
             var totalArray = [];
             var total = 0;
-            
-            // console.log(cardsInHand.length);
             
             for (var i = 0; i < hand.length; i++) {
                 totalArray.push(hand[i].value);
@@ -138,6 +137,7 @@ console.log("LINKED");
     }
 
     function playerLose() {
+        revealComputerHand();
         $('#modal').toggle(); 
         $('.modal-title').text("You Lose!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
@@ -146,6 +146,7 @@ console.log("LINKED");
     }
 
     function computerLose() {
+        revealComputerHand();
         $('#modal').toggle(); 
         $('.modal-title').text("You Win!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
@@ -154,8 +155,9 @@ console.log("LINKED");
     }
 
     function gamePush() {
+        revealComputerHand();
         $('#modal').toggle(); 
-        $('.modal-title').text("It was a push!");
+        $('.modal-title').text("Push! It's a tie!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
         console.log("push! it's a tie!");
@@ -174,7 +176,11 @@ console.log("LINKED");
     function drawHand (card,$section) {        
         var $newCard = $('<div>').attr('class','card animated fadeInDown');
         $newCard.css('background-image',card.imageUrl);
-        $section.append($newCard);
+        $section.append($newCard); 
+    }
+
+    function revealComputerHand() {
+        $('.computer-hand > .card').eq(0).css('background-image',computerHand[0].imageUrl);
     }
 
     $('#play-again').on('click',function(event){
