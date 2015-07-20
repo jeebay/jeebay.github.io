@@ -104,6 +104,13 @@ console.log("LINKED");
         enableButton($('.stand'));
         enableButton($('.double-down'));
         
+        var balance = readMoney($('.chip-total'));
+        var bet = readMoney($('.bet-total'));
+        if (balance < bet) {
+            disableButton($('.double-down'));
+        }
+
+
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
         
@@ -316,11 +323,5 @@ console.log("LINKED");
 
     bettingRound();
 
-    // setTimeout(function () { 
-    //     dealCard1(); 
-    //     setTimeout(function () { 
-    //         dealCard2; 
-    //     }, 600); 
-    // }, 600)
 
 // })
