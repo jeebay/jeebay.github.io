@@ -63,6 +63,32 @@ console.log("LINKED");
     var playerHand = [];
     var computerHand = [];
     var backOfCard = new Card('back of card',0,'all suits',"url('images/cards/classic-cards/b2fv.png')");
+    var bankrupt = false;
+
+    function enableButton (button) {
+        button.removeAttr('disabled');
+        button.removeClass('disabled');
+    }
+
+    function disableButton (button) {
+        button.attr('disabled','disabled');
+        button.addClass('disabled')
+    }
+
+    function bettingRound() {
+        $('.player-hand').empty();
+        $('.computer-hand').empty();
+        
+        if (readMoney($('.chip-total')) <= 0) {
+            bankrupt = true;
+            gameOver();
+        }
+
+        enableButton($('#confirm-bet'));
+
+        disableButton($('.hit'));
+        disableButton($('.stand'));
+    }
 
     function dealNewHand() {
         var $playerHand = $('.player-hand');
@@ -70,10 +96,12 @@ console.log("LINKED");
         playingDeck = _.shuffle(fullDeck);
         playerHand = playingDeck.splice(0,2);
         computerHand = playingDeck.splice(0,2);
-        
 
-        $('.player-hand').empty();
-        $('.computer-hand').empty();
+        disableButton($('#confirm-bet'));
+        
+        enableButton($('.hit'));
+        enableButton($('.stand'));
+        
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
         
@@ -87,11 +115,11 @@ console.log("LINKED");
         // console.log(playerHand.cards.length);
 
         if (blackJackValue(playerHand) === 21 && blackJackValue(computerHand) === 21) {
-            gamePush();
+            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),'push');
         } else if (blackJackValue(playerHand) === 21) {
-            computerLose();
+            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),'blackjack');
         } else if (blackJackValue(computerHand) === 21) {
-            playerLose();
+            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand));
         }
     }
 
@@ -119,7 +147,7 @@ console.log("LINKED");
         drawHand(newCard,$section);
         $section.next().text(blackJackValue(hand));
         if (blackJackValue(hand) > 21) {
-            return "busted with "+blackJackValue(hand);
+            return "player busts";
         } else {
             return blackJackValue(hand);
         }
@@ -130,7 +158,7 @@ console.log("LINKED");
             hit(playingDeck,hand,$section);
         }
         if (blackJackValue(hand) > 21) {
-            return "busted with "+blackJackValue(hand);
+            return "computer busts";
         } else {
             return blackJackValue(hand);
         }
@@ -145,7 +173,7 @@ console.log("LINKED");
         console.log("you lose");
     }
 
-    function computerLose() {
+    function playerWin(message) {
         revealComputerHand();
         $('#modal').toggle(); 
         $('.modal-title').text("You Win!");
@@ -163,14 +191,34 @@ console.log("LINKED");
         console.log("push! it's a tie!");
     }
 
-    function decideWinner(playerTotal,computerTotal) {
-        if (playerTotal > computerTotal) {
-            computerLose();
+    function gameOver() {
+        revealComputerHand();
+        $('#modal').toggle(); 
+        $('.modal-title').text("You're out of dough!");
+        $('.score').text('');
+        $('#play-again').text('Start over');
+        console.log("Game over");
+    }
+
+    function decideWinner(playerTotal,computerTotal,result) {
+        if (result === 'computer busts') {
+            winMoney($('.bet-total'),$('.chip-total'));
+            playerWin();
+        } else if (result === 'blackjack') {
+            winMoney($('.bet-total'),$('.chip-total'),result);
+            playerWin();
+        } else if (result === 'player busts') {
+            playerLose();
+        } else if (playerTotal > computerTotal) {
+            winMoney($('.bet-total'),$('.chip-total'));
+            playerWin();
         } else if (computerTotal > playerTotal) {
             playerLose();
         } else {
+            winMoney($('.bet-total'),$('.chip-total'),'push');
             gamePush();
         }
+        $('.bet-total').text('$0');
     }
 
     function drawHand (card,$section) {        
@@ -183,25 +231,63 @@ console.log("LINKED");
         $('.computer-hand > .card').eq(0).css('background-image',computerHand[0].imageUrl);
     }
 
+    function readMoney($element) {
+        return Math.floor(parseInt($element.text().replace(/[^0-9-.]/g, '')));
+    }
+
+    function writeMoney(amount,$element) {
+        $element.text('$' + amount.toString());
+    }
+
+    function placeBet($amount,$account,$pot){
+        var balance = readMoney($account);
+        var bet = $amount.val();
+        if (balance >= bet) {
+            writeMoney(bet,$pot);
+            writeMoney((balance-bet),$account);
+            disableButton($('#confirm-bet'));
+            dealNewHand();
+        }
+        $amount.val('');
+    }
+
+    function winMoney($pot,$account,result) {
+        var winnings = readMoney($pot);
+        var balance = readMoney($account);
+        if (result === 'blackjack') {
+            balance += winnings*2.5
+        } else if (result === 'push') {
+            balance += winnings;
+        } else {
+            balance += winnings*2;
+        }
+        writeMoney(balance,$account);
+        $pot.text('$0');
+    }
+
     $('#play-again').on('click',function(event){
-        dealNewHand();
+        if (bankrupt) {
+            $('.chip-total').text('$200');
+            bankrupt = false;
+        }
+        bettingRound();
         $('#modal').toggle(); //CREATE this button
     });
 
     $('.hit').on('click',function(event){
         var result = hit(playingDeck,playerHand,$('.player-hand'));
         if (typeof(result) === "string") {
-            playerLose();
+            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),result);
         } 
     });
 
     $('.stand').on('click',function(){
         var computerResult = autoPlay(computerHand,$('.computer-hand'));
-        if (typeof(computerResult) === "string") {            
-            computerLose();
-        } else {
-            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand));
-        }
+        decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),computerResult);
+    });
+
+    $('#confirm-bet').on('click',function(){
+        placeBet($('#bet'),$('.chip-total'),$('.bet-total'));
     });
 
     // dealNewHand();
