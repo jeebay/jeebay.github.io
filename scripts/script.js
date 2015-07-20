@@ -318,7 +318,9 @@ console.log("LINKED");
     });
 
     $('#confirm-bet').on('click',function(){
-        placeBet($('#bet'),$('.chip-total'),$('.bet-total'));
+        if ($('#bet').val() > 0) {
+            placeBet($('#bet'),$('.chip-total'),$('.bet-total'));
+        }
     });
 
     bettingRound();
