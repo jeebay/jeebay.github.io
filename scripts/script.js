@@ -88,7 +88,7 @@ console.log("LINKED");
 
         disableButton($('.hit'));
         disableButton($('.stand'));
-        disableButton($('#double-down'));
+        disableButton($('.double-down'));
     }
 
     function dealNewHand() {
@@ -102,7 +102,7 @@ console.log("LINKED");
         
         enableButton($('.hit'));
         enableButton($('.stand'));
-        enableButton($('#double-down'));
+        enableButton($('.double-down'));
         
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
@@ -126,18 +126,21 @@ console.log("LINKED");
     }
 
     function blackJackValue(hand){
-            var totalArray = [];
+            var valueArray = [];
             var total = 0;
-            
+            var k = 0
+
             for (var i = 0; i < hand.length; i++) {
-                totalArray.push(hand[i].value);
-                total += totalArray[i];
+                valueArray.push(hand[i].value);
+                total += valueArray[i];
             }
-            if (total > 21) {
-                for (var k = 0; k < totalArray.length; k++) {
-                    if(totalArray[k] === 11) {
+
+            if (valueArray.indexOf(11) >= 0 && total > 21) {
+                while (total > 21) {
+                    if (valueArray[k] === 11) {
                         total -= 10;
                     }
+                    k++;
                 }
             }
             return total;
@@ -168,7 +171,7 @@ console.log("LINKED");
 
     function playerLose() {
         revealComputerHand();
-        $('#modal').removeClass('hidden'); 
+        $('.modal').removeClass('hidden'); 
         $('.modal-title').text("You Lose!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -177,7 +180,7 @@ console.log("LINKED");
 
     function playerWin(message) {
         revealComputerHand();
-        $('#modal').removeClass('hidden');
+        $('.modal').removeClass('hidden');
         $('.modal-title').text("You Win!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -186,7 +189,7 @@ console.log("LINKED");
 
     function gamePush() {
         revealComputerHand();
-        $('#modal').removeClass('hidden');
+        $('.modal').removeClass('hidden');
         $('.modal-title').text("Push! It's a tie!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -195,7 +198,7 @@ console.log("LINKED");
 
     function gameOver() {
         revealComputerHand();
-        $('#modal').removeClass('hidden');
+        $('.modal').removeClass('hidden');
         $('.modal-title').text("You're out of dough!");
         $('.score').text('');
         $('#play-again').text('Start over');
@@ -220,7 +223,6 @@ console.log("LINKED");
             winMoney($('.bet-total'),$('.chip-total'),'push');
             gamePush();
         }
-        $('.bet-total').text('$0');
     }
 
     function drawHand (card,$section) {        
@@ -264,7 +266,6 @@ console.log("LINKED");
             balance += winnings*2;
         }
         writeMoney(balance,$account);
-        $pot.text('$0');
     }
 
     $('#play-again').on('click',function(event){
@@ -272,8 +273,10 @@ console.log("LINKED");
             $('.chip-total').text('$200');
             bankrupt = false;
         }
+        $('.bet-total').text('$0');
+        $('.modal').addClass('hidden');
         bettingRound();
-        $('#modal').addClass('hidden');;
+        
     });
 
     $('.hit').on('click',function(event){
@@ -283,18 +286,22 @@ console.log("LINKED");
         } 
     });
 
-    $('#double-down').on('click',function(){
+    $('.double-down').on('click',function(){
         var balance = readMoney($('.chip-total'));
         var bet = readMoney($('.bet-total'));
+        
         if (balance >= bet) {
             writeMoney((bet*2),$('.bet-total'));
             writeMoney((balance-bet),$('.chip-total'));
+            
             var result = hit(playingDeck,playerHand,$('.player-hand'));
+            console.log(result);
             if (typeof(result) === "string") {
                 decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),result);
+            } else {
+                var computerResult = autoPlay(computerHand,$('.computer-hand'));
+                decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),computerResult);
             }
-            var computerResult = autoPlay(computerHand,$('.computer-hand'));
-            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),computerResult);
         }
     })
 
