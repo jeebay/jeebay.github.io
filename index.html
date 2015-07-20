@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <title>Blackjack</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css"></style>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"></style>
@@ -10,7 +11,7 @@
         
 </head>
 <body>
-    <div id="modal">
+    <div id="modal" class="hidden">
         <div class="modal-text">
             <h4 class="modal-title">Let's Play Blackjack!</h4>
             <p class="score"></p>
@@ -28,7 +29,8 @@
                     <h4>Actions</h4>
                     <button class="hit">Hit</button>
                     <button class="stand">Stand</button>
-                    <button id="split">Split</button>
+                    <button id="double-down">Double Down</button>
+                    <button id="split" class="hidden">Split</button>
                     <h4>Betting</h4>
                     <h5>Chip total: </h5>
                     <p><em class="chip-total">$200</em></p>
@@ -36,7 +38,6 @@
                     <p><em class="bet-total">$0</em></p>
                     <input type="text" id="bet" placeholder="Enter your bet"></input>
                     <button id="confirm-bet">Bet</button>
-                    <button id="double-down">Double Down</button>
 
                 </div>
             </div>

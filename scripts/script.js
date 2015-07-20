@@ -88,6 +88,7 @@ console.log("LINKED");
 
         disableButton($('.hit'));
         disableButton($('.stand'));
+        disableButton($('#double-down'));
     }
 
     function dealNewHand() {
@@ -101,6 +102,7 @@ console.log("LINKED");
         
         enableButton($('.hit'));
         enableButton($('.stand'));
+        enableButton($('#double-down'));
         
         $('.computer-total').text(blackJackValue(computerHand));
         $('.player-total').text(blackJackValue(playerHand));
@@ -166,7 +168,7 @@ console.log("LINKED");
 
     function playerLose() {
         revealComputerHand();
-        $('#modal').toggle(); 
+        $('#modal').removeClass('hidden'); 
         $('.modal-title').text("You Lose!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -175,7 +177,7 @@ console.log("LINKED");
 
     function playerWin(message) {
         revealComputerHand();
-        $('#modal').toggle(); 
+        $('#modal').removeClass('hidden');
         $('.modal-title').text("You Win!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -184,7 +186,7 @@ console.log("LINKED");
 
     function gamePush() {
         revealComputerHand();
-        $('#modal').toggle(); 
+        $('#modal').removeClass('hidden');
         $('.modal-title').text("Push! It's a tie!");
         $('.score').text('You had '+blackJackValue(playerHand)+' and the dealer had '+blackJackValue(computerHand));
         $('#play-again').text('Play next hand');
@@ -193,7 +195,7 @@ console.log("LINKED");
 
     function gameOver() {
         revealComputerHand();
-        $('#modal').toggle(); 
+        $('#modal').removeClass('hidden');
         $('.modal-title').text("You're out of dough!");
         $('.score').text('');
         $('#play-again').text('Start over');
@@ -271,7 +273,7 @@ console.log("LINKED");
             bankrupt = false;
         }
         bettingRound();
-        $('#modal').toggle(); //CREATE this button
+        $('#modal').addClass('hidden');;
     });
 
     $('.hit').on('click',function(event){
@@ -280,6 +282,21 @@ console.log("LINKED");
             decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),result);
         } 
     });
+
+    $('#double-down').on('click',function(){
+        var balance = readMoney($('.chip-total'));
+        var bet = readMoney($('.bet-total'));
+        if (balance >= bet) {
+            writeMoney((bet*2),$('.bet-total'));
+            writeMoney((balance-bet),$('.chip-total'));
+            var result = hit(playingDeck,playerHand,$('.player-hand'));
+            if (typeof(result) === "string") {
+                decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),result);
+            }
+            var computerResult = autoPlay(computerHand,$('.computer-hand'));
+            decideWinner(blackJackValue(playerHand),blackJackValue(computerHand),computerResult);
+        }
+    })
 
     $('.stand').on('click',function(){
         var computerResult = autoPlay(computerHand,$('.computer-hand'));
@@ -290,7 +307,7 @@ console.log("LINKED");
         placeBet($('#bet'),$('.chip-total'),$('.bet-total'));
     });
 
-    // dealNewHand();
+    bettingRound();
 
     // setTimeout(function () { 
     //     dealCard1(); 
