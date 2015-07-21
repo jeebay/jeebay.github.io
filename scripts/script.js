@@ -80,6 +80,7 @@ $(document).ready(function(){
         }
 
         enableButton($('#confirm-bet'));
+        enableButton($('#bet'));
 
         disableButton($('.hit'));
         disableButton($('.stand'));
@@ -107,6 +108,7 @@ $(document).ready(function(){
         computerHand = playingDeck.splice(0,2);
 
         disableButton($('#confirm-bet'));
+        disableButton($('#bet'));
         
         enableButton($('.hit'));
         enableButton($('.stand'));
