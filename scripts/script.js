@@ -204,27 +204,27 @@ $(document).ready(function(){
 
     // Computes a blackjack value for a given hand
     function blackJackValue(hand){
-            var valueArray = [];
-            var total = 0;
-            var k = 0
+        var valueArray = [];
+        var total = 0;
+        var k = 0
 
-            // Iterate through the hand with card values accumulating in 'total'
-            for (var i = 0; i < hand.length; i++) {
-                valueArray.push(hand[i].value);
-                total += valueArray[i];
-            }
+        // Iterate through the hand with card values accumulating in 'total'
+        for (var i = 0; i < hand.length; i++) {
+            valueArray.push(hand[i].value);
+            total += valueArray[i];
+        }
 
-            // Ace handling--while total is over 21, look for aces and decrease total by 10
-            if (valueArray.indexOf(11) >= 0 && total > 21) {
-                while (total > 21) {
-                    if (valueArray[k] === 11) {
-                        total -= 10;
-                    }
-                    k++;
+        // Ace handling--while total is over 21, look for aces and decrease total by 10
+        if (valueArray.indexOf(11) >= 0 && total > 21) {
+            while (total > 21) {
+                if (valueArray[k] === 11) {
+                    total -= 10;
                 }
+                k++;
             }
-            return total;
-        };
+        }
+        return total;
+    };
 
     // Writes the appropriate winnings to the user total
     function winMoney($pot,$account,result) {
