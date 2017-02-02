@@ -6,6 +6,8 @@ const $bowserOutput = $('#bowser_output');
 const ua = root.navigator.userAgent;
 const browser = root.bowser._detect(ua);
 
+$('#ua').html(`${root.navigator.userAgent}`);
+
 Object.keys(root.platform).forEach(key => {
     if (key !== 'parse') {
         $platformOutput.append($(`<li><pre>platform.${key} = ${platform[key]}</pre></li>`))
