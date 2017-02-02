@@ -2,11 +2,12 @@
 
 const $platformOutput = $('#platform_output');
 const $bowserOutput = $('#bowser_output');
+const $ua = $('#ua');
 
 const ua = root.navigator.userAgent;
 const browser = root.bowser._detect(ua);
 
-$('#ua').html(`${root.navigator.userAgent}`);
+$ua.html(`${window.navigator.userAgent}`);
 
 Object.keys(root.platform).forEach(key => {
     if (key !== 'parse') {
