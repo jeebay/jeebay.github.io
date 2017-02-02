@@ -11,12 +11,12 @@ $ua.html(`${window.navigator.userAgent}`);
 
 Object.keys(root.platform).forEach(key => {
     if (key !== 'parse') {
-        $platformOutput.append($(`<li><pre>platform.${key} = ${platform[key]}</pre></li>`))
+        $platformOutput.append($('<li><pre>platform.' + key + ' = ' + platform[key] + '</pre></li>'));
     }
 });
 
 Object.keys(browser).forEach(key => {
-    $bowserOutput.append($(`<li><pre>bowser.${key} = ${browser[key]}</pre></li>`))
+    $bowserOutput.append($('<li><pre> bowser.' + key + ' = ' + browser[key] + '</pre></li>'));
 });
 
 })(window);
